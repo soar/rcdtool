@@ -33,6 +33,7 @@ import readline
 from random import randrange
 
 import configparser
+import filetype
 from telethon import TelegramClient
 from telethon.functions import channels
 from telethon.types import InputChannel
@@ -197,6 +198,8 @@ def main():
     # Get the output filename
     if args.output_filename is None:
         output_filename = f'tg-download-{updated_channel_id}-{message_id}'
+        if output_dir := os.getenv("OUTPUT_DIR"):
+            output_filename = os.path.expandvars(os.path.expanduser(f'{output_dir}/{output_filename}'))
     else:
         output_filename = args.output_filename
 
@@ -208,6 +211,11 @@ def main():
                    output_filename=output_filename,
                    )
     client.loop.run_until_complete(coro)
+
+    file_kind = filetype.guess(output_filename)
+    new_filename = f"{output_filename}.{file_kind.extension}"
+    os.rename(output_filename, new_filename)
+    print("Renamed file", new_filename)
 
 
 if __name__ == '__main__':
