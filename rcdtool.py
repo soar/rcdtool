@@ -196,7 +196,7 @@ def main():
 
     # Get the output filename
     if args.output_filename is None:
-        output_filename = f'file-{randrange(00000, 99999)}'
+        output_filename = f'tg-download-{updated_channel_id}-{message_id}'
     else:
         output_filename = args.output_filename
 
